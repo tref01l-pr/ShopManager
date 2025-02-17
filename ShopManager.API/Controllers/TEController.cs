@@ -55,10 +55,10 @@ public class TEController : BaseController
         return Ok(response);
     }
 
-    [HttpGet("recent-customers")]
+    [HttpGet("recent-orders")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> GetRecentCustomers([FromQuery] int days)
+    public async Task<ActionResult> GetRecentOrders([FromQuery] int days)
     {
         var users = await _ordersService.GetRecentOrdersAsync(days);
 
