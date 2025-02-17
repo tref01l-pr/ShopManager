@@ -13,7 +13,6 @@ using ShopManager.Domain.Interfaces;
 using ShopManager.Domain.Interfaces.Repositories;
 using ShopManager.Domain.Models;
 using ShopManager.Domain.Options;
-using ResetPasswordRequest = ShopManager.API.Contracts.Requests.ResetPasswordRequest;
 
 public class UsersAccountController : BaseController
 {
@@ -44,29 +43,6 @@ public class UsersAccountController : BaseController
         _transactionsRepository = transactionsRepository;
         _usersService = usersService;
         _configuration = configuration;
-    }
-
-    [AllowAnonymous]
-    [HttpGet("hello")]
-    public IActionResult Hello()
-    {
-        return Ok("Hello!");
-    }
-
-    [AllowAnonymous]
-    [HttpGet("test-env-1")]
-    public IActionResult TestEnv1()
-    {
-        string? myVariable = Environment.GetEnvironmentVariable("MY_VARIABLE");
-        return Ok("TestEnv1 = " + myVariable);
-    }
-
-    [AllowAnonymous]
-    [HttpGet("test-env-2")]
-    public IActionResult TestEnv2()
-    {
-        string? myVariable = _configuration["MY_VARIABLE"];
-        return Ok("TestEnv2 = " + myVariable);
     }
 
     [AllowAnonymous]
@@ -214,34 +190,6 @@ public class UsersAccountController : BaseController
             Nickname = userResult.Value.UserName,
             Email = userResult.Value.Email,
         });
-    }
-
-    [AllowAnonymous]
-    [HttpPost("/reset-password")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
-    {
-        var userResult =
-            await _usersService.GetById<UserEntity>(request.Id);
-
-        if (userResult.IsFailure)
-        {
-            return BadRequest(userResult.Error);
-        }
-
-        if (userResult.Value is null)
-        {
-            return BadRequest("User not found.");
-        }
-
-        var result = await _userManager.ResetPasswordAsync(userResult.Value, request.Token, request.Password);
-        if (!result.Succeeded)
-        {
-            return BadRequest(result.Errors);
-        }
-
-        return Ok("Password was reset.");
     }
 
     [AllowAnonymous]

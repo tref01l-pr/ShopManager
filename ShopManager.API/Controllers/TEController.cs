@@ -32,6 +32,8 @@ public class TEController : BaseController
     }
 
     [HttpGet("birthdays")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> GetBirthdayUsers([FromQuery] string dateStr)
     {
         if (!DateOnly.TryParse(dateStr, out var date))
@@ -54,6 +56,8 @@ public class TEController : BaseController
     }
 
     [HttpGet("recent-customers")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> GetRecentCustomers([FromQuery] int days)
     {
         var users = await _ordersService.GetRecentOrdersAsync(days);
@@ -70,6 +74,8 @@ public class TEController : BaseController
     }
 
     [HttpGet("user-categories")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> GetUserCategories()
     {
         if (UserId.IsFailure)
